@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>GitHub Actions CI Result</title>
+ <style>
+ table {
+ border-collapse: collapse;
+ width: 100%;
+ }
+ th, td {
+ border: 1px solid black;
+ padding: 8px;
+ text-align: left;
+ }
+ th {
+ background-color: #f2f2f2;
+ }
+ </style>
+</head>
+<body>
+ <h1>Result of execute.py</h1>
+ {% if result %}
+ <table>
+ <thead>
+ <tr>
+ <th>Product</th>
+ <th>Revenue</th>
+ </tr>
+ </thead>
+ <tbody>
+ {% for product, revenue in result.items() %}
+ <tr>
+ <td>{{ product }}</td>
+ <td>{{ revenue }}</td>
+ </tr>
+ {% endfor %}
+ </tbody>
+ </table>
+ {% else %}
+ <p>No data available.</p>
+ {% endif %}
+</body>
+</html>
+{% endraw %}
+
+import pandas as pd
+
+def main():
+    # Fix the typo in the original code
+    revenew = 'revenue'
+
+    # Read data from the provided Excel file
+    data = pd.read_excel('data.xlsx')
+
+    # Calculate the revenue for each product
+    data[revenew] = data['Price'] * data['Quantity']
+
+    # Convert the DataFrame to a dictionary
+    result = data.set_index('Product')[revenew].to_dict()
+
+    # Save the result as a CSV file
+    data.to_csv('data.csv', index=False)
+
+if __name__ == '__main__':
+    main()
